@@ -70,7 +70,15 @@ CRITICAL REQUIREMENTS:
 - Age-appropriate and educational content
 - Professional children's book illustration quality
 
-REMEMBER: You are illustrating what happens IN the story, not someone reading or telling the story."""
+ABSOLUTELY NO TEXT IN THE IMAGE:
+- NO words, letters, or text of any kind
+- NO labels, captions, or dialogue bubbles
+- NO signs, posters, or written content visible in the scene
+- NO story text appearing in the illustration
+- This is a pure illustration with ZERO text elements
+- The image should contain ONLY visual elements - no readable text whatsoever
+
+REMEMBER: You are illustrating what happens IN the story, not someone reading or telling the story. The illustration must be completely text-free."""
 
         try:
             response = self.client.images.generate(
