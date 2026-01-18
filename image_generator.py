@@ -36,24 +36,41 @@ class ImageGenerator:
         # Build comprehensive prompt with character consistency
         char_prompt = ""
         if character_descriptions:
-            char_prompt = "\n\n**CRITICAL - CHARACTER CONSISTENCY REQUIRED:**\n"
+            char_prompt = "\n\n**CHARACTER APPEARANCE - MUST BE IDENTICAL ON EVERY PAGE:**\n"
             for name, description in character_descriptions.items():
-                char_prompt += f"• {name} MUST ALWAYS appear as: {description}\n"
-            char_prompt += "\nEach character MUST maintain the EXACT SAME appearance throughout the entire book. Do not change hair color, eye color, skin tone, clothing, or any other features between pages.\n"
+                char_prompt += f"• {name}: {description}\n"
+            char_prompt += "\n**CRITICAL CONSISTENCY RULES:**\n"
+            char_prompt += "- Every character MUST look EXACTLY the same on every page\n"
+            char_prompt += "- Same hair color, style, and length throughout\n"
+            char_prompt += "- Same eye color on every page\n"
+            char_prompt += "- Same skin tone on every page\n"
+            char_prompt += "- Same clothing throughout the entire story\n"
+            char_prompt += "- Same age and proportions on every page\n"
+            char_prompt += "- If a character wears glasses, they wear them on EVERY page\n"
+            char_prompt += "- Use the EXACT same character design as established\n"
 
         style = art_style or self.style_prompt
 
-        full_prompt = f"""SCENE: {scene_description}
+        full_prompt = f"""Create a children's book illustration showing: {scene_description}
 {char_prompt}
+
 ILLUSTRATION STYLE: {style}
 
-REQUIREMENTS:
-- Page {page_number} of a children's book
-- Maintain EXACT character consistency (same hair, eyes, skin, clothing as described)
-- Use the same character design as in previous pages
-- Bright, clear, child-friendly composition
-- Age-appropriate content
-- Professional children's book quality"""
+CRITICAL REQUIREMENTS:
+- This is page {page_number} of a children's reader book
+- Create a DIRECT ILLUSTRATION of the scene described above
+- DO NOT show characters reading a book or looking at pages
+- DO NOT include books, pages, or text within the illustration
+- DO NOT show meta-scenes of storytelling or reading
+- Show the ACTION and SCENE directly as if we are watching it happen
+- Maintain PERFECT character consistency with previous pages
+- Each character must be INSTANTLY recognizable from page to page
+- Use bright, engaging colors suitable for children
+- Clear, simple composition focused on the main action
+- Age-appropriate and educational content
+- Professional children's book illustration quality
+
+REMEMBER: You are illustrating what happens IN the story, not someone reading or telling the story."""
 
         try:
             response = self.client.images.generate(
