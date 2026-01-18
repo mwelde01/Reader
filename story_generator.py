@@ -152,7 +152,10 @@ Generate the story now in the specified JSON format."""
 
             # Try to parse as JSON
             import json
+            import re
+
             # Find JSON in the response (it might be wrapped in markdown code blocks)
+            original_content = content
             if "```json" in content:
                 json_start = content.find("```json") + 7
                 json_end = content.find("```", json_start)
@@ -162,7 +165,25 @@ Generate the story now in the specified JSON format."""
                 json_end = content.find("```", json_start)
                 content = content[json_start:json_end].strip()
 
-            story_data = json.loads(content)
+            # Try to find JSON object if no code blocks
+            if not content.strip().startswith("{"):
+                # Look for the first { and last }
+                match = re.search(r'\{.*\}', content, re.DOTALL)
+                if match:
+                    content = match.group(0)
+
+            try:
+                story_data = json.loads(content)
+            except json.JSONDecodeError as json_err:
+                # Log the problematic content for debugging
+                print(f"JSON Parse Error: {json_err}")
+                print(f"Attempted to parse: {content[:500]}...")
+
+                # Try one more time with more aggressive cleanup
+                # Remove any trailing commas before closing brackets
+                content = re.sub(r',(\s*[}\]])', r'\1', content)
+                story_data = json.loads(content)
+
             return story_data
 
         except Exception as e:
