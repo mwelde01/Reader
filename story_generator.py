@@ -101,7 +101,9 @@ STORY REQUIREMENTS:
 7. Each page should be suitable for illustration
 
 OUTPUT FORMAT:
-Provide your response as a structured JSON object with:
+CRITICAL: You must return ONLY valid JSON. No extra text before or after.
+
+Provide your response as a structured JSON object with this EXACT format:
 {{
     "title": "Story Title Here",
     "pages": [
@@ -112,9 +114,16 @@ Provide your response as a structured JSON object with:
         }}
     ],
     "character_descriptions": {{
-        "CharacterName": "Detailed consistent description of character's appearance for illustrations"
+        "CharacterName": "Detailed consistent description of character appearance for illustrations"
     }}
 }}
+
+IMPORTANT JSON RULES:
+- Use double quotes for all strings, never single quotes
+- No trailing commas after the last item in arrays or objects
+- Escape any quotes within text with backslash
+- Ensure all brackets and braces are properly closed
+- Return ONLY the JSON object, nothing else
 """
 
         user_prompt = f"""Create a leveled reader story for {reading_level} with the following specifications:
@@ -179,10 +188,27 @@ Generate the story now in the specified JSON format."""
                 print(f"JSON Parse Error: {json_err}")
                 print(f"Attempted to parse: {content[:500]}...")
 
-                # Try one more time with more aggressive cleanup
-                # Remove any trailing commas before closing brackets
+                # Try aggressive cleanup
+                # 1. Remove trailing commas before closing brackets
                 content = re.sub(r',(\s*[}\]])', r'\1', content)
-                story_data = json.loads(content)
+
+                # 2. Fix common quote issues - replace smart quotes with regular quotes
+                content = content.replace('"', '"').replace('"', '"')
+                content = content.replace("'", "'").replace("'", "'")
+
+                # 3. Try to fix unescaped quotes within strings (basic attempt)
+                # This is tricky, but we can try to escape quotes that aren't part of JSON structure
+
+                try:
+                    story_data = json.loads(content)
+                except json.JSONDecodeError as second_err:
+                    print(f"Second JSON Parse Error: {second_err}")
+                    print(f"Cleaned content: {content[:500]}...")
+
+                    # Last resort: try to manually fix the JSON
+                    # Remove any single quotes and replace with double quotes cautiously
+                    # This is a heuristic and might not always work
+                    raise ValueError(f"Could not parse JSON after cleanup attempts. Original error: {json_err}")
 
             return story_data
 
