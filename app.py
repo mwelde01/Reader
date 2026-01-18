@@ -156,26 +156,77 @@ def main():
         for i in range(num_chars):
             with st.container():
                 st.markdown(f'<div class="character-box">', unsafe_allow_html=True)
+                st.markdown(f"**Character {i+1}**")
+
                 col1, col2 = st.columns(2)
                 with col1:
                     char_name = st.text_input(
-                        f"Character {i+1} Name",
+                        f"Name",
                         key=f"char_name_{i}",
                         placeholder=f"Character {i+1} (optional)"
                     )
                 with col2:
                     char_gender = st.selectbox(
-                        f"Character {i+1} Gender",
+                        f"Gender",
                         ["boy", "girl", "non-binary", "unspecified"],
                         key=f"char_gender_{i}"
                     )
+
+                # Physical appearance details
+                with st.expander("✨ Customize Appearance (Optional)", expanded=False):
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        hair_color = st.text_input(
+                            "Hair Color",
+                            key=f"char_hair_{i}",
+                            placeholder="e.g., brown, blonde, black"
+                        )
+                        eye_color = st.text_input(
+                            "Eye Color",
+                            key=f"char_eyes_{i}",
+                            placeholder="e.g., brown, blue, green"
+                        )
+                    with col2:
+                        skin_tone = st.text_input(
+                            "Skin Tone",
+                            key=f"char_skin_{i}",
+                            placeholder="e.g., light, tan, brown, dark"
+                        )
+                        age = st.text_input(
+                            "Age/Grade",
+                            key=f"char_age_{i}",
+                            placeholder="e.g., 5 years old, kindergarten"
+                        )
+                    with col3:
+                        clothing = st.text_input(
+                            "Clothing Style",
+                            key=f"char_clothing_{i}",
+                            placeholder="e.g., blue shirt, red dress"
+                        )
+                        other_features = st.text_input(
+                            "Other Features",
+                            key=f"char_other_{i}",
+                            placeholder="e.g., glasses, curly hair"
+                        )
+
                 st.markdown('</div>', unsafe_allow_html=True)
 
                 # Use defaults if not provided
                 if not char_name:
                     char_name = f"Character{i+1}"
 
-                characters.append({"name": char_name, "gender": char_gender})
+                # Build character object with appearance details
+                char_dict = {
+                    "name": char_name,
+                    "gender": char_gender,
+                    "hair_color": hair_color if hair_color else None,
+                    "eye_color": eye_color if eye_color else None,
+                    "skin_tone": skin_tone if skin_tone else None,
+                    "age": age if age else None,
+                    "clothing": clothing if clothing else None,
+                    "other_features": other_features if other_features else None
+                }
+                characters.append(char_dict)
 
         st.divider()
 

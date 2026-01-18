@@ -38,7 +38,29 @@ class StoryGenerator:
         for i, char in enumerate(characters):
             name = char.get('name', f'Character{i+1}')
             gender = char.get('gender', 'non-binary')
-            char_descriptions.append(f"- {name} ({gender})")
+
+            # Build detailed character description
+            desc_parts = [f"{name} ({gender})"]
+
+            # Add physical appearance details if provided
+            appearance = []
+            if char.get('age'):
+                appearance.append(f"{char['age']}")
+            if char.get('skin_tone'):
+                appearance.append(f"{char['skin_tone']} skin")
+            if char.get('hair_color'):
+                appearance.append(f"{char['hair_color']} hair")
+            if char.get('eye_color'):
+                appearance.append(f"{char['eye_color']} eyes")
+            if char.get('other_features'):
+                appearance.append(f"{char['other_features']}")
+            if char.get('clothing'):
+                appearance.append(f"wearing {char['clothing']}")
+
+            if appearance:
+                desc_parts.append(": " + ", ".join(appearance))
+
+            char_descriptions.append(f"- {''.join(desc_parts)}")
 
         # Build story prompts section
         prompt_section = ""

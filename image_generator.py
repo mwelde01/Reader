@@ -36,19 +36,24 @@ class ImageGenerator:
         # Build comprehensive prompt with character consistency
         char_prompt = ""
         if character_descriptions:
-            char_prompt = "\n\nCHARACTER APPEARANCES (maintain consistency):\n"
+            char_prompt = "\n\n**CRITICAL - CHARACTER CONSISTENCY REQUIRED:**\n"
             for name, description in character_descriptions.items():
-                char_prompt += f"- {name}: {description}\n"
+                char_prompt += f"• {name} MUST ALWAYS appear as: {description}\n"
+            char_prompt += "\nEach character MUST maintain the EXACT SAME appearance throughout the entire book. Do not change hair color, eye color, skin tone, clothing, or any other features between pages.\n"
 
         style = art_style or self.style_prompt
 
-        full_prompt = f"""{scene_description}
-
+        full_prompt = f"""SCENE: {scene_description}
 {char_prompt}
+ILLUSTRATION STYLE: {style}
 
-Style: {style}
-
-Important: This is page {page_number} of a children's reader. Keep characters consistent with their descriptions, use bright colors, clear compositions, and age-appropriate imagery."""
+REQUIREMENTS:
+- Page {page_number} of a children's book
+- Maintain EXACT character consistency (same hair, eyes, skin, clothing as described)
+- Use the same character design as in previous pages
+- Bright, clear, child-friendly composition
+- Age-appropriate content
+- Professional children's book quality"""
 
         try:
             response = self.client.images.generate(
