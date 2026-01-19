@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Leveled Reader Creator - Classroom Display</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #1E88E5;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: calc(100vh - 80px);
+            border: none;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Fullscreen mode */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #1E88E5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+
+        .fullscreen-btn:hover {
+            background-color: #1565C0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📚 Custom Leveled Reader Creator</h1>
+        <p>Create custom educational readers based on national standards</p>
+    </div>
+
+    <div class="iframe-container">
+        <div class="loading" id="loading">Loading application...</div>
+        <iframe
+            id="app-frame"
+            src="https://reader-iwhd9s8u8qmvxn2zuvnbfs.streamlit.app/"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+            onload="document.getElementById('loading').style.display='none'">
+        </iframe>
+    </div>
+
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">
+        🔳 Fullscreen
+    </button>
+
+    <script>
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Update button text based on fullscreen state
+        document.addEventListener('fullscreenchange', () => {
+            const btn = document.querySelector('.fullscreen-btn');
+            if (document.fullscreenElement) {
+                btn.textContent = '⬜ Exit Fullscreen';
+            } else {
+                btn.textContent = '🔳 Fullscreen';
+            }
+        });
+
+        // Hide loading message after timeout if iframe doesn't trigger onload
+        setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+        }, 5000);
+    </script>
+</body>
+</html>
